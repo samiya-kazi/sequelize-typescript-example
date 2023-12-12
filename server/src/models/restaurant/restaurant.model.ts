@@ -1,38 +1,44 @@
-import { Model, DataTypes, Optional, Sequelize } from 'sequelize';
+import { Model, DataTypes, Optional } from 'sequelize';
+import sequelize from '..';
 import { IRestaurant } from '../../interfaces/restaurant.interface';
+import Food from '../food/food.model';
 
-const model = (sequelize: Sequelize) => {
+interface RestaurantCreationAttributes extends Optional<IRestaurant, 'id'> {};
 
-  type RestaurantCreationAttributes = Optional<IRestaurant, 'id'>;
+interface RestaurantInstance extends Model<IRestaurant, RestaurantCreationAttributes>, IRestaurant {
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
-  class Restaurant extends Model<IRestaurant, RestaurantCreationAttributes> {
-    declare id: number;
-    declare name: string;
-    declare address: string;
-  }
-  
-  Restaurant.init({
+const Restaurant = sequelize.define<RestaurantInstance>(
+  'Restaurant',
+  {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
       autoIncrement: true,
       primaryKey: true,
+      type: DataTypes.INTEGER,
+      unique: true,
     },
     name: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     address: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.TEXT,
       allowNull: false,
-    },
-  },
-  {
-    tableName: 'restaurants',
-    sequelize
-  });
-
-  return Restaurant
-}
+    }
+  }
+);
 
 
-export default model;
+Restaurant.hasMany(Food, {
+  sourceKey: 'id',
+  foreignKey: 'restaurantId',
+});
+
+Food.belongsTo(Restaurant, {
+  foreignKey: 'restaurantId',
+})
+
+export default Restaurant;
