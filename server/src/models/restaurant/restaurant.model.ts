@@ -2,6 +2,7 @@ import { Model, DataTypes, Optional } from 'sequelize';
 import sequelize from '..';
 import { IRestaurant } from '../../interfaces/restaurant.interface';
 import Food from '../food/food.model';
+import Order from '../order/order.model';
 
 interface RestaurantCreationAttributes extends Optional<IRestaurant, 'id'> {};
 
@@ -41,4 +42,12 @@ Food.belongsTo(Restaurant, {
   foreignKey: 'restaurantId',
 })
 
+Restaurant.hasMany(Order, {
+  sourceKey: 'id',
+  foreignKey: 'restaurantId',
+});
+
+Order.belongsTo(Restaurant, {
+  foreignKey: 'restaurantId',
+})
 export default Restaurant;
