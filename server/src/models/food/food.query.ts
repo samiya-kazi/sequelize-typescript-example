@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import Restaurant from "../restaurant/restaurant.model";
 import Food from "./food.model";
 
@@ -36,5 +37,20 @@ export async function addFoodToRestaurant (restaurantId: number, data: { name: s
     return newFood;
   } catch (error) {
     throw new Error('Error adding food to restaurant.');
+  }
+}
+
+
+export async function findFoodBySearchTerm (searchTerm: string) {
+  try {
+    const food = await Food.findAll({
+      where: {
+        name: {[Op.iLike]: `%${searchTerm}%`}
+      },
+      include: [Restaurant]
+    });
+    return food;
+  } catch (error) {
+    throw new Error('Error searching for food.');
   }
 }

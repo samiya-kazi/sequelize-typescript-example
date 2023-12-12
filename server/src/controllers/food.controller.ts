@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { addFoodToRestaurant, findAllFood, findAllFoodInRestaurant } from "../models/food/food.query";
+import { addFoodToRestaurant, findAllFood, findAllFoodInRestaurant, findFoodBySearchTerm } from "../models/food/food.query";
 
 
 export async function getAllFoodWithRestaurantInfo (req: Request, res: Response) {
@@ -40,6 +40,21 @@ export async function postFoodToRestaurant (req: Request, res: Response) {
       } else res.status(400).json({ message: "Invalid food information." });
     } else res.status(400).json({ message: "Invalid restaurant ID." });
 
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+}
+
+export async function searchFood (req: Request, res: Response) {
+  try {
+    const search = req.query.q;
+    const searchTerm = search?.toString();
+
+    if (searchTerm) {
+      const food = await findFoodBySearchTerm(searchTerm);
+      res.json({ data: food });
+    } else res.json({ data: [] });
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
