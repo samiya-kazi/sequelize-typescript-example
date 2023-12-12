@@ -1,5 +1,17 @@
 import { Request, Response } from "express";
-import { addFoodToRestaurant, findAllFoodInRestaurant } from "../models/food/food.query";
+import { addFoodToRestaurant, findAllFood, findAllFoodInRestaurant } from "../models/food/food.query";
+
+
+export async function getAllFoodWithRestaurantInfo (req: Request, res: Response) {
+  try {
+    const food = await findAllFood();
+    res.json({ data: food });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+}
+
 
 export async function getAllFoodOfRestaurant (req: Request, res: Response) {
   try {

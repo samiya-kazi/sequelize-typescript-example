@@ -10,7 +10,7 @@ interface FoodInstance extends Model<IFood, FoodCreationAttributes>, IFood {
 }
 
 
-const Food = sequelize.define<FoodInstance>('Food', {
+const Food = sequelize.define<FoodInstance>('food', {
   id: {
     allowNull: false,
     autoIncrement: true,

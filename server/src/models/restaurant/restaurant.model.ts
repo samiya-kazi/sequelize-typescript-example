@@ -11,7 +11,7 @@ interface RestaurantInstance extends Model<IRestaurant, RestaurantCreationAttrib
 }
 
 const Restaurant = sequelize.define<RestaurantInstance>(
-  'Restaurant',
+  'restaurant',
   {
     id: {
       allowNull: false,
